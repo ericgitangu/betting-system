@@ -2,7 +2,7 @@
 
 ## Folder Structure
 
-- `config`: Contains configuration files for the app.
+- `assets`: Contains asset files for the app - JS, CSS & Images.
 - `lib`: Contains source code files for the application logic.
 - `priv`: Contains private application files (e.g., assets, templates).
 - `test`: Contains test files for the application.
@@ -20,7 +20,7 @@ To set up and run this application, you need to follow these steps:
 
 To use the application, follow these steps:
 
-1. Access the application at `http://https://elixir-phoenix-bets.fly.dev/:4000`
+1. Access the application at `http:/localhost:4000`
 2. Sign up or log in with Github to start viewing and participating in wagering bets
 
 ## Overview
@@ -69,7 +69,6 @@ The betting system will be a dynamic, scalable web application built using the P
 
 - Implement secure authentication and session management.
 - Ensure proper role-based access control for different user types.
-- Sanitize input to prevent SQL injection and other common web vulnerabilities.
 
 #### Testing
 
@@ -78,16 +77,14 @@ The betting system will be a dynamic, scalable web application built using the P
 ### Development and Deployment
 
 - Use Mix for project management and dependencies.
-- Employ continuous integration (CI) practices with tools like GitHub Actions or GitLab CI for automated testing and deployment.
+- Employ continuous integration (CI) practices with tool -GitHub.
 - Deploy the application to a production environment - Fly.io.
 
 ### Maintenance and Scalability
 
-- Monitor system performance and optimize queries and processes for efficiency.
+- Monitor system performance and optimize queries and processes for efficiency - dev/platform.
 - Use Phoenix's built-in support for WebSockets for real-time features, if necessary.
-- Plan for horizontal scalability to accommodate growing user numbers and data volume.
-
-This document provides a high-level overview and detailed implementation strategies for building a robust and scalable betting system using Elixir and Phoenix. The actual implementation may require adjustments and optimizations based on real-world testing and user feedback.
+- Normalize DBs effectively to support effecient querying.
 
 ## Database Schema Migrations
 
@@ -230,7 +227,7 @@ config :ueberauth, Ueberauth.Strategy.Google.OAuth,
   redirect_uri: System.get_env("GOOGLE_REDIRECT_URI")
 ```
 
-## Test Strategy
+## Uniti-Test Strategy
 
 Next, we'll write ExUnit tests for the create_user function in the Bets.Accounts module. These tests will verify that the function behaves as expected when given valid and invalid input.
 
@@ -274,10 +271,7 @@ end
 
 ## ERD Relationships
 
-1. User Entity: A rectangle labeled "User" with attributes listed inside. A line extends from this entity to the "Bet" entity, indicating the One-to-Many relationship.
-2. Game Entity: A rectangle labeled "Game" with attributes listed inside. A line extends from this entity to the "Bet" entity, indicating the One-to-Many relationship.
-3. Bet Entity: A rectangle labeled "Bet" with attributes listed inside. It has lines connecting it to both the "User" and "Game" entities, representing the foreign keys.
-4. Transaction Entity: A rectangle labeled "Transaction" with attributes listed inside. It has lines connecting it to both the "User" and "Bet" entities, representing the foreign keys.
+[Entity Relational Diagram]('/assets/BettingSystemERD.png')
 
 ## User Schema specific roles
 
