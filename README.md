@@ -310,6 +310,7 @@ end
 
 In your accounts context (or wherever you manage user-related logic), implement functions to grant or revoke admin roles. Ensure that only superusers can execute these functions.
 
+```sh
 defmodule Bets.Accounts do
   alias Bets.Accounts.User
   alias Bets.Repo
@@ -354,6 +355,7 @@ defmodule Bets.Accounts do
     end
   end
 end
+```
 
 ## Protecting Role Mangement Functions
 
