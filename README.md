@@ -1,5 +1,28 @@
 # Betting System
 
+## Folder Structure
+
+- `config`: Contains configuration files for the app.
+- `lib`: Contains source code files for the application logic.
+- `priv`: Contains private application files (e.g., assets, templates).
+- `test`: Contains test files for the application.
+
+## Installation
+
+To set up and run this application, you need to follow these steps:
+
+1. Clone the repository: `git clone https:/github.com/ericgitangu/elixir-phoenix-betting-system`
+2. Install dependencies: `mix deps.get`
+3. Create and migrate the database: `mix ecto.setup`
+4. Start the Phoenix server: `mix phx.server`
+
+## Usage
+
+To use the application, follow these steps:
+
+1. Access the application at `http://https://elixir-phoenix-bets.fly.dev/:4000`
+2. Sign up or log in with Github to start viewing and participating in wagering bets
+
 ## Overview
 
 Creating an architectural document and detailed implementation plan for a betting system using Elixir and Phoenix involves several steps. This document outlines the architecture, components, and implementation details of the system.
@@ -73,7 +96,7 @@ Below are the migration files needed to create the necessary tables in your Post
 ## Users Table
 
 ```sh
-defmodule MyApp.Repo.Migrations.CreateUsers do
+defmodule Bets.Repo.Migrations.CreateUsers do
   use Ecto.Migration
 
   def change do
@@ -95,7 +118,7 @@ end
 ## Games Table
 
 ```sh
-defmodule MyApp.Repo.Migrations.CreateGames do
+defmodule Bets.Repo.Migrations.CreateGames do
   use Ecto.Migration
 
   def change do
@@ -114,7 +137,7 @@ end
 ## Bets Table
 
 ```sh
-defmodule MyApp.Repo.Migrations.CreateBets do
+defmodule Bets.Repo.Migrations.CreateBets do
   use Ecto.Migration
 
   def change do
@@ -136,7 +159,7 @@ end
 ## User Schema
 
 ```sh
-defmodule MyApp.Accounts.User do
+defmodule Bets.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
 
@@ -162,9 +185,9 @@ end
 ## User Creation
 
 ```sh
-defmodule MyApp.Accounts do
-  alias MyApp.Accounts.User
-  alias MyApp.Repo
+defmodule Bets.Accounts do
+  alias Bets.Accounts.User
+  alias Bets.Repo
 
   def create_user(attrs) do
     %User{}
@@ -209,16 +232,16 @@ config :ueberauth, Ueberauth.Strategy.Google.OAuth,
 
 ## Test Strategy
 
-Next, we'll write ExUnit tests for the create_user function in the MyApp.Accounts module. These tests will verify that the function behaves as expected when given valid and invalid input.
+Next, we'll write ExUnit tests for the create_user function in the Bets.Accounts module. These tests will verify that the function behaves as expected when given valid and invalid input.
 
 ## Example - Test for Successfull User Creation
 
 ```sh
-defmodule MyApp.AccountsTest do
-  use MyApp.DataCase
+defmodule Bets.AccountsTest do
+  use Bets.DataCase
 
-  alias MyApp.Accounts
-  alias MyApp.Accounts.User
+  alias Bets.Accounts
+  alias Bets.Accounts.User
 
   describe "create_user/1" do
     test "creates a user with valid data" do
@@ -249,25 +272,143 @@ describe "create_user/1 with invalid data" do
 end
 ```
 
-## Folder Structure
+## ERD Relationships
 
-- `config`: Contains configuration files for the app.
-- `lib`: Contains source code files for the application logic.
-- `priv`: Contains private application files (e.g., assets, templates).
-- `test`: Contains test files for the application.
+1. User Entity: A rectangle labeled "User" with attributes listed inside. A line extends from this entity to the "Bet" entity, indicating the One-to-Many relationship.
+2. Game Entity: A rectangle labeled "Game" with attributes listed inside. A line extends from this entity to the "Bet" entity, indicating the One-to-Many relationship.
+3. Bet Entity: A rectangle labeled "Bet" with attributes listed inside. It has lines connecting it to both the "User" and "Game" entities, representing the foreign keys.
+4. Transaction Entity: A rectangle labeled "Transaction" with attributes listed inside. It has lines connecting it to both the "User" and "Bet" entities, representing the foreign keys.
 
-## Installation
+## User Schema specific roles
 
-To set up and run this application, you need to follow these steps:
+First, ensure your user schema includes a field to store the user's role. You might have a role field that can store values such as "user", "admin", or "superuser".
 
-1. Clone the repository: `git clone https:/github.com/ericgitangu/elixir-phoenix-betting-system`
-2. Install dependencies: `mix deps.get`
-3. Create and migrate the database: `mix ecto.setup`
-4. Start the Phoenix server: `mix phx.server`
+```sh
+defmodule Bets.Accounts.User do
+  use Ecto.Schema
+  import Ecto.Changeset
 
-## Usage
+  schema "users" do
+    field :first_name, :string
+    field :last_name, :string
+    field :email_address, :string
+    field :msisdn, :string
+    field :role, :string, default: "user" # Assuming 'user', 'admin', 'superuser'
 
-To use the application, follow these steps:
+    timestamps()
+  end
 
-1. Access the application at `http://https://elixir-phoenix-bets.fly.dev/:4000`
-2. Sign up or log in with Github to start viewing and participating in wagering bets
+  def changeset(user, attrs) do
+    user
+    |> cast(attrs, [:first_name, :last_name, :email_address, :msisdn, :role])
+    |> validate_required([:first_name, :last_name, :email_address, :msisdn, :role])
+  end
+end
+```
+
+## Role Management
+
+In your accounts context (or wherever you manage user-related logic), implement functions to grant or revoke admin roles. Ensure that only superusers can execute these functions.
+
+defmodule Bets.Accounts do
+  alias Bets.Accounts.User
+  alias Bets.Repo
+
+  <!-- Function to grant admin role -->
+  def grant_admin_role(superuser_id, target_user_id) do
+    with {:ok, superuser} <- get_superuser(superuser_id),
+         {:ok, target_user} <- get_user(target_user_id) do
+      target_user
+      |> User.changeset(%{role: "admin"})
+      |> Repo.update()
+    else
+      _error -> {:error, :unauthorized}
+    end
+  end
+
+  <!--  Function to revoke admin role -->
+  def revoke_admin_role(superuser_id, target_user_id) do
+    with {:ok, superuser} <- get_superuser(superuser_id),
+         {:ok, target_user} <- get_user(target_user_id) do
+      target_user
+      |> User.changeset(%{role: "user"})
+      |> Repo.update()
+    else
+      _error -> {:error, :unauthorized}
+    end
+  end
+
+   <!-- Helper function to fetch a superuser -->
+  defp get_superuser(id) do
+    case Repo.get(User, id) do
+      %User{role: "superuser"} = user -> {:ok, user}
+      _ -> {:error, :not_found}
+    end
+  end
+
+  <!-- # Helper function to fetch any user -->
+  defp get_user(id) do
+    case Repo.get(User, id) do
+      nil -> {:error, :not_found}
+      user -> {:ok, user}
+    end
+  end
+end
+
+## Protecting Role Mangement Functions
+
+Ensure that role management functions can only be executed by superusers. This can be done at the controller level by checking the current user's role before allowing them to call grant_admin_role/2 or revoke_admin_role/2. You might use a plug or a controller callback to perform this check.
+
+```sh
+defmodule BetsWeb.UserController do
+  use BetsWeb, :controller
+
+  plug :authorize_superuser when action in [:grant_admin, :revoke_admin]
+
+  def grant_admin(conn, %{"target_user_id" => target_user_id}) do
+    current_user = conn.assigns.current_user
+    case Bets.Accounts.grant_admin_role(current_user.id, target_user_id) do
+      {:ok, _user} -> 
+        conn
+        |> put_flash(:info, "Admin role granted successfully.")
+        |> redirect(to: Routes.user_path(conn, :index))
+      {:error, _reason} -> 
+        conn
+        |> put_flash(:error, "Unauthorized.")
+        |> redirect(to: Routes.page_path(conn, :index))
+    end
+  end
+
+  def revoke_admin(conn, %{"target_user_id" => target_user_id}) do
+    current_user = conn.assigns.current_user
+    case Bets.Accounts.revoke_admin_role(current_user.id, target_user_id) do
+      {:ok, _user} -> 
+        conn
+        |> put_flash(:info, "Admin role revoked successfully.")
+        |> redirect(to: Routes.user_path(conn, :index))
+      {:error, _reason} -> 
+        conn
+        |> put_flash(:error, "Unauthorized.")
+        |> redirect(to: Routes.page_path(conn, :index))
+    end
+  end
+  ```
+
+## Plug to check if the current user is a super
+
+  ```sh
+  plug :authorize_superuser when action in [:grant_admin, :revoke_admin]
+
+  defp authorize_superuser(conn, _opts) do
+    current_user = conn.assigns[:current_user]
+
+    if current_user && current_user.role == "superuser" do
+      conn
+    else
+      conn
+      |> put_flash(:error, "You must be a superuser to perform this action.")
+      |> redirect(to: Routes.page_path(conn, :index))
+      |> halt()
+    end
+  end
+  ```
