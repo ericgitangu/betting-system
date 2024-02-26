@@ -50,15 +50,13 @@ The betting system will be a dynamic, scalable web application built using the P
 
 #### Testing
 
-- **Unit Tests**: Write Elixir doctests and ExUnit tests for individual functions to ensure reliability and correctness.
-- **Integration Tests**: Use ExUnit to write tests that cover the interaction between different components, such as user registration flow, bet placement, and outcome processing.
-- **Acceptance Tests**: Implement browser-based tests using tools like Hound or Wallaby to simulate user interactions with the web interface.
+- **Unit Tests**: Write Elixir doctests and ExUnit tests for individual functions to ensure reliability and correctness. Also to test out edge cases.
 
 ### Development and Deployment
 
 - Use Mix for project management and dependencies.
 - Employ continuous integration (CI) practices with tools like GitHub Actions or GitLab CI for automated testing and deployment.
-- Deploy the application to a production environment using a platform like Heroku, Gigalixir, or AWS, with Docker for containerization.
+- Deploy the application to a production environment - Fly.io.
 
 ### Maintenance and Scalability
 
