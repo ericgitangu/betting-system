@@ -271,7 +271,7 @@ end
 
 ## ERD Relationships
 
-! [Alt text](/assets/BettingSystemERD.png "ERD")
+![Entity Relational Diagram](assets/BettingSystemERD.png)
 
 ## User Schema specific roles
 
