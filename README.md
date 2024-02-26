@@ -227,7 +227,7 @@ config :ueberauth, Ueberauth.Strategy.Google.OAuth,
   redirect_uri: System.get_env("GOOGLE_REDIRECT_URI")
 ```
 
-## Uniti-Test Strategy
+## Unit-Test Strategy (Red/Green)
 
 Next, we'll write ExUnit tests for the create_user function in the Bets.Accounts module. These tests will verify that the function behaves as expected when given valid and invalid input.
 
@@ -269,7 +269,7 @@ describe "create_user/1 with invalid data" do
 end
 ```
 
-## ERD Relationships
+## Entity Relational Diagram
 
 ![Entity Relational Diagram](assets/BettingSystemERD.png)
 
