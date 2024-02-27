@@ -10,7 +10,7 @@ defmodule BettingSystem.Application do
     children = [
       BettingSystemWeb.Telemetry,
       BettingSystem.Repo,
-      {DNSCluster, query: Application.get_env(:Bets, :dns_cluster_query) || :ignore},
+      {DNSCluster, query: Application.get_env(:BettingSystem, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: BettingSystem.PubSub},
       # Start the Finch HTTP client for sending emails
       {Finch, name: BettingSystem.Finch},

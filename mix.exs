@@ -3,7 +3,7 @@ defmodule BettingSystem.MixProject do
 
   def project do
     [
-      app: :Bets,
+      app: :BettingSystem,
       version: "0.1.0",
       elixir: "~> 1.14",
       elixirc_paths: elixirc_paths(Mix.env()),
@@ -74,10 +74,10 @@ defmodule BettingSystem.MixProject do
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
       "assets.setup": ["tailwind.install --if-missing", "esbuild.install --if-missing"],
-      "assets.build": ["tailwind Bets", "esbuild Bets"],
+      "assets.build": ["tailwind BettingSystem", "esbuild BettingSystem"],
       "assets.deploy": [
-        "tailwind Bets --minify",
-        "esbuild Bets --minify",
+        "tailwind BettingSystem --minify",
+        "esbuild BettingSystem --minify",
         "phx.digest"
       ]
     ]

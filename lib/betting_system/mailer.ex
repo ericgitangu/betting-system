@@ -1,3 +1,3 @@
 defmodule BettingSystem.Mailer do
-  use Swoosh.Mailer, otp_app: :Bets
+  use Swoosh.Mailer, otp_app: :BettingSystem
 end

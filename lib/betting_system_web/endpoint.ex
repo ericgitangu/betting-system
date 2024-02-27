@@ -1,12 +1,12 @@
 defmodule BettingSystemWeb.Endpoint do
-  use Phoenix.Endpoint, otp_app: :Bets
+  use Phoenix.Endpoint, otp_app: :BettingSystem
 
   # The session will be stored in the cookie and signed,
   # this means its contents can be read but not tampered with.
   # Set :encryption_salt if you would also like to encrypt it.
   @session_options [
     store: :cookie,
-    key: "_Bets_key",
+    key: "_BettingSystem_key",
     signing_salt: "NBaMf9a6",
     same_site: "Lax"
   ]
@@ -21,7 +21,7 @@ defmodule BettingSystemWeb.Endpoint do
   # when deploying your static files in production.
   plug Plug.Static,
     at: "/",
-    from: :Bets,
+    from: :BettingSystem,
     gzip: false,
     only: BettingSystemWeb.static_paths()
 
@@ -31,7 +31,7 @@ defmodule BettingSystemWeb.Endpoint do
     socket "/phoenix/live_reload/socket", Phoenix.LiveReloader.Socket
     plug Phoenix.LiveReloader
     plug Phoenix.CodeReloader
-    plug Phoenix.Ecto.CheckRepoStatus, otp_app: :Bets
+    plug Phoenix.Ecto.CheckRepoStatus, otp_app: :BettingSystem
   end
 
   plug Phoenix.LiveDashboard.RequestLogger,

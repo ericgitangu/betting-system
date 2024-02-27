@@ -8,8 +8,8 @@ const path = require("path")
 module.exports = {
   content: [
     "./js/**/*.js",
-    "../lib/Bets_web.ex",
-    "../lib/Bets_web/**/*.*ex"
+    "../lib/BettingSystem_web.ex",
+    "../lib/BettingSystem_web/**/*.*ex"
   ],
   theme: {
     extend: {
